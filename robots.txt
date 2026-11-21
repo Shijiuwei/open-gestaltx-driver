@@ -1,0 +1,6 @@
+# Public technical documentation robots policy
+User-agent: *
+Allow: /
+Allow: /docs/
+
+Sitemap: https://shijiuwei.github.io/open-gestaltx-driver/sitemap.xml

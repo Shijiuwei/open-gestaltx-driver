@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>open-gestaltx-driver</title>
+  <subtitle>An MobileGestalt editor for iOS 27.x, featuring region-code tweaks, device presets, backups. | Core specifications, benchmarks and developer documentation.</subtitle>
+  <link href="https://shijiuwei.github.io/open-gestaltx-driver/feed.xml" rel="self"/>
+  <id>https://shijiuwei.github.io/open-gestaltx-driver/</id>
+  <updated>2026-11-21T19:24:14.991798+00:00</updated>
+  <entry>
+    <title>open-gestaltx-driver 子系统职责划分指南</title>
+    <link href="https://shijiuwei.github.io/open-gestaltx-driver/docs/architecture.html"/>
+    <id>https://shijiuwei.github.io/open-gestaltx-driver/docs/architecture.html</id>
+    <updated>2026-11-21T19:24:14.991798+00:00</updated>
+    <summary>An MobileGestalt editor for iOS 27.x, featuring region-code tweaks, device presets, backups. | Core specifications, benchmarks and develo...</summary>
+  </entry>
+  <entry>
+    <title>open-gestaltx-driver 工程规格与质量门槛</title>
+    <link href="https://shijiuwei.github.io/open-gestaltx-driver/docs/specifications.html"/>
+    <id>https://shijiuwei.github.io/open-gestaltx-driver/docs/specifications.html</id>
+    <updated>2026-11-21T19:24:14.991798+00:00</updated>
+    <summary>围绕参数边界、序列化格式与运行时约束整理的基线规约，保障 open-gestaltx-driver 在持续演进下保持高信噪比：</summary>
+  </entry>
+  <entry>
+    <title>open-gestaltx-driver — 生产部署与运维检查清单</title>
+    <link href="https://shijiuwei.github.io/open-gestaltx-driver/docs/deployment-notes.html"/>
+    <id>https://shijiuwei.github.io/open-gestaltx-driver/docs/deployment-notes.html</id>
+    <updated>2026-11-21T19:24:14.991798+00:00</updated>
+    <summary>结合本地与分布式部署场景整理的接入检查清单（覆盖核心主题：open-gestaltx-driver、open）。</summary>
+  </entry>
+</feed>

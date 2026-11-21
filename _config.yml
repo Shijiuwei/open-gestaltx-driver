@@ -1,0 +1,6 @@
+title: "open-gestaltx-driver"
+description: "An MobileGestalt editor for iOS 27.x, featuring region-code tweaks, device presets, backups. | Core specifications, benchmarks and developer documentation."
+lang: en-US
+exclude:
+  - node_modules
+  - .git

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>open-gestaltx-driver 子系统职责划分指南 — open-gestaltx-driver</title>
+<meta name="robots" content="index, follow, max-snippet:-1">
+<meta property="og:title" content="open-gestaltx-driver 子系统职责划分指南 — open-gestaltx-driver">
+<meta property="og:description" content="An MobileGestalt editor for iOS 27.x, featuring region-code tweaks, device presets, backups. | Core specifications, benchmarks and develo...">
+<meta property="og:type" content="website">
+<meta name="generator" content="StaticDoc Compiler">
+<meta name="description" content="An MobileGestalt editor for iOS 27.x, featuring region-code tweaks, device presets, backups. | Core specifications, benchmarks and develo...">
+<link rel="canonical" href="https://shijiuwei.github.io/open-gestaltx-driver/docs/architecture.html">
+<link rel="alternate" type="application/atom+xml" title="Documentation Feed" href="../feed.xml">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","author":{"@type":"Organization","name":"open-gestaltx-driver"},"description":"An MobileGestalt editor for iOS 27.x, featuring region-code tweaks, device presets, backups. | Core specifications, benchmarks and develo...","headline":"open-gestaltx-driver 子系统职责划分指南 — open-gestaltx-driver","inLanguage":"zh-CN","keywords":"高韧性系统架构设计, 模块化解耦与协议标准, 生产环境运维调优手册, 分布式状态机一致性, 可信存活健康度量, GestaltX, Gestalt, MobileGestalt","name":"open-gestaltx-driver 子系统职责划分指南 — open-gestaltx-driver","url":"https://shijiuwei.github.io/open-gestaltx-driver/docs/architecture.html"}</script>
+<style>
+:root{--kit-701-bg:#ffffff;--kit-701-sf:#f4f6f9;--kit-701-ink:#0f172a;--kit-701-mut:#52525b;--kit-701-acc:#0d9488;--kit-701-bd:rgba(15,23,42,0.10);--kit-701-r:9px;--kit-701-rsm:5px;--kit-701-mw:1180px;}
+*,*::before,*::after{box-sizing:border-box;}
+html{scroll-behavior:smooth;font-size:15px;}
+body{margin:0;padding:0;background:var(--kit-701-bg);color:var(--kit-701-ink);font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, 'Noto Sans SC', sans-serif;line-height:1.72;-webkit-font-smoothing:antialiased;}
+a{color:var(--kit-701-acc);text-decoration:none;}
+a:hover{text-decoration:underline;}
+.kit-701-wrap{max-width:var(--kit-701-mw);margin:0 auto;padding:0 24px;}
+.kit-701-brand{display:inline-flex;align-items:center;gap:10px;font-weight:700;color:var(--kit-701-ink);letter-spacing:-0.015em;text-decoration:none;}
+.kit-701-brand:hover{text-decoration:none;color:var(--kit-701-acc);}
+.kit-701-mark{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;font-size:12px;font-weight:800;background:var(--kit-701-acc);color:#fff;border-radius:8px;flex-shrink:0;letter-spacing:0.04em;}
+.kit-701-navlinks{display:flex;align-items:center;gap:18px;flex-wrap:wrap;font-size:0.88rem;font-weight:500;}
+.kit-701-navlinks a{color:var(--kit-701-mut);text-decoration:none;}
+.kit-701-navlinks a:hover,.kit-701-navlinks a.kit-701-active{color:var(--kit-701-acc);font-weight:600;}
+.kit-701-card{background:var(--kit-701-sf);border:1px solid var(--kit-701-bd);border-radius:var(--kit-701-r);padding:20px;}
+.kit-701-pill{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;border:1px solid var(--kit-701-bd);color:var(--kit-701-acc);background:transparent;}
+.kit-701-prose h1{font-size:clamp(1.65rem,2.6vw,2.25rem);line-height:1.25;margin:0 0 16px;letter-spacing:-0.02em;color:var(--kit-701-ink);}
+.kit-701-prose h2{font-size:1.3rem;margin:28px 0 12px;padding-bottom:6px;border-bottom:1px solid var(--kit-701-bd);color:var(--kit-701-ink);}
+.kit-701-prose h3{font-size:1.05rem;margin:20px 0 8px;color:var(--kit-701-ink);}
+.kit-701-prose p{margin:0 0 14px;}
+.kit-701-prose ul,.kit-701-prose ol{margin:0 0 16px;padding-left:22px;}
+.kit-701-prose li{margin:5px 0;}
+.kit-701-prose code{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:0.86em;background:rgba(15,23,42,0.06);padding:2px 6px;border-radius:4px;}
+.kit-701-prose pre{background:#0f172a;color:#e2e8f0;padding:16px 18px;border-radius:var(--kit-701-rsm);overflow-x:auto;font-size:0.84rem;line-height:1.58;border:1px solid var(--kit-701-bd);}
+.kit-701-prose pre code{background:transparent;padding:0;color:inherit;}
+.kit-701-prose table{width:100%;border-collapse:collapse;margin:18px 0;font-size:0.88rem;}
+.kit-701-prose th,.kit-701-prose td{border:1px solid var(--kit-701-bd);padding:9px 12px;text-align:left;}
+.kit-701-prose th{background:var(--kit-701-sf);font-weight:600;}
+.kit-701-prose blockquote{margin:16px 0;padding:10px 16px;border-left:3px solid var(--kit-701-acc);background:var(--kit-701-sf);color:var(--kit-701-mut);border-radius:0 var(--kit-701-rsm) var(--kit-701-rsm) 0;}
+.kit-701-refs{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-top:16px;}
+.kit-701-refcard{display:block;padding:12px 14px;border:1px solid var(--kit-701-bd);border-radius:var(--kit-701-rsm);background:var(--kit-701-bg);color:var(--kit-701-ink);transition:border-color 0.15s ease,transform 0.15s ease;}
+.kit-701-refcard:hover{border-color:var(--kit-701-acc);text-decoration:none;transform:translateY(-1px);}
+.kit-701-reflabel{display:block;font-weight:600;font-size:0.88rem;margin-bottom:3px;}
+.kit-701-refurl{display:block;font-family:ui-monospace,monospace;font-size:11px;color:var(--kit-701-mut);word-break:break-all;}
+.kit-701-ftr{margin-top:44px;padding:24px 0 36px;border-top:1px solid var(--kit-701-bd);font-size:0.82rem;color:var(--kit-701-mut);display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:center;}
+.kit-701-hero{background:#f4f6f9;color:#0f172a;border:1px solid var(--kit-701-bd);border-radius:var(--kit-701-r);padding:28px 30px;margin-bottom:24px;}
+.kit-701-hero h1{color:#0f172a;margin:8px 0 10px;font-size:clamp(1.75rem,3vw,2.4rem);line-height:1.2;}
+.kit-701-hero p{color:#52525b;margin:0 0 18px;max-width:740px;font-size:0.98rem;}
+.kit-701-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--kit-701-rsm);background:var(--kit-701-acc);color:#fff;font-size:0.85rem;font-weight:600;border:none;}
+.kit-701-btn:hover{opacity:0.92;text-decoration:none;}
+.kit-701-btn-ghost{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--kit-701-rsm);background:transparent;color:inherit;border:1px solid var(--kit-701-bd);font-size:0.85rem;font-weight:600;}
+.kit-701-grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:20px 0;}
+.kit-701-grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:20px 0;}
+.kit-701-hdr{position:sticky;top:0;z-index:20;background:var(--kit-701-bg);border-bottom:1px solid var(--kit-701-bd);}
+.kit-701-hdr-in{display:flex;align-items:center;justify-content:space-between;height:56px;gap:16px;}
+.kit-701-api-grid{display:grid;grid-template-columns:220px minmax(0,1fr) 310px;gap:24px;padding-top:24px;align-items:start;}
+.kit-701-api-side{position:sticky;top:74px;font-size:0.84rem;display:flex;flex-direction:column;gap:5px;}
+.kit-701-api-side a{padding:6px 10px;border-radius:6px;color:var(--kit-701-mut);}
+.kit-701-api-side a:hover,.kit-701-api-side a.kit-701-active{background:var(--kit-701-sf);color:var(--kit-701-acc);font-weight:600;text-decoration:none;}
+.kit-701-api-pane{position:sticky;top:74px;background:#0f172a;color:#e2e8f0;border-radius:var(--kit-701-r);padding:16px;font-size:12px;border:1px solid rgba(255,255,255,0.08);}
+.kit-701-method{display:inline-block;padding:1px 6px;border-radius:4px;background:rgba(13,148,136,0.22);color:#5eead4;font-family:ui-monospace,monospace;font-size:10px;font-weight:700;margin-right:6px;}
+@media(max-width:1080px){.kit-701-api-grid{grid-template-columns:200px minmax(0,1fr);}.kit-701-api-pane{position:static;grid-column:1 / -1;}}
+@media(max-width:768px){.kit-701-api-grid,.kit-701-grid3,.kit-701-grid2{grid-template-columns:1fr;}}
+
+</style>
+</head>
+<body>
+<header class="kit-701-hdr">
+<div class="kit-701-wrap kit-701-hdr-in">
+<a class="kit-701-brand" href="../index.html"><span class="kit-701-mark">OG</span><span>open-gestaltx-driver <small style="font-weight:500;color:var(--kit-701-mut);">API</small></span></a>
+<nav class="kit-701-navlinks">
+<a href="../index.html" class="">Portal</a>
+<a href="../docs/index.html" class="">Manual</a>
+<a href="../docs/specifications.html" class="">API & Specs</a>
+<a href="https://github.com/shijiuwei/open-gestaltx-driver" target="_blank" rel="noopener">Upstream</a>
+</nav>
+</div>
+</header>
+<div class="kit-701-wrap">
+<div class="kit-701-api-grid">
+<aside class="kit-701-api-side">
+<div class="kit-701-asidetitle" style="font-size:11px;font-weight:700;color:var(--kit-701-mut);text-transform:uppercase;margin-bottom:6px;">Endpoints &amp; Guides</div>
+<a href="../index.html">Portal</a>
+<a href="../docs/index.html">Manual</a>
+<a href="../docs/architecture.html" class="kit-701-active">open-gestaltx-driver 子系统职责划分指南</a>
+<a href="../docs/specifications.html">open-gestaltx-driver 工程规格与质量门槛</a>
+<a href="../docs/deployment-notes.html">open-gestaltx-driver — 生产部署与运维检查清单</a>
+
+</aside>
+<main class="kit-701-prose" style="min-width:0;">
+<div style="margin-bottom:14px;"><span class="kit-701-pill">Architecture</span></div>
+<article><h1>open-gestaltx-driver 子系统职责划分指南</h1>
+<p>An MobileGestalt editor for iOS 27.x, featuring region-code tweaks, device presets, backups. | Core specifications, benchmarks and developer documentation.</p>
+<p>围绕 <strong>open-gestaltx-driver</strong> 整理的面向工程落地的模块化结构说明，确保扩展阶段各模块保持低耦合与可验证性：</p>
+<ul>
+<li><strong>配置与上下文抽象（open-gestaltx-driver）</strong>：解耦环境变量、静态资产与任务策略参数</li>
+<li><strong>流水线与容错切换（open）</strong>：对外部端点与远端仓库操作提供明确失败隔离</li>
+<li><strong>静态站点与知识归档（gestaltx）</strong>：保障跨版本页面结构清晰且便于检索引擎解析</li>
+</ul>
+<h2>配套资料</h2>
+<ul>
+<li><a href="https://index.bangchengcareer.cn/post/2551419">高韧性系统架构设计 Reference</a></li>
+<li><a href="https://info.ai-hao123.com">模块化解耦与协议标准 Reference</a></li>
+<li><a href="https://www.ai-hao123.com/sitemap.xml">生产环境运维调优手册 Reference</a></li>
+<li><a href="https://info.ai-hao123.com/d/vh190049.html">分布式状态机一致性 Reference</a></li>
+<li><a href="https://blog.ai-hao123.com">可信存活健康度量 Reference</a></li>
+<li><a href="https://read.ai-hao123.com/sitemap.xml">GestaltX Reference</a></li>
+</ul>
+</article>
+<div class="kit-701-card" style="margin-top:26px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;">
+<a href="deployment-notes.html">&larr; open-gestaltx-driver — 生产部署与运维检查清单</a>
+<a href="index.html">Catalog (3)</a>
+<a href="specifications.html">open-gestaltx-driver 工程规格与质量门槛 &rarr;</a>
+</div>
+<section class="kit-701-card" style="margin-top:24px;">
+<h2 style="margin-top:0;">Contextual Reference Directory</h2>
+<p style="color:var(--kit-701-mut);font-size:0.88rem;margin-bottom:12px;">Topic-scoped technical references and integration guides for <strong>open-gestaltx-driver</strong>.</p>
+<div class="kit-701-refs"><a class="kit-701-refcard" href="https://blog.ai-hao123.com/sitemap.xml" target="_blank" rel="noopener"><span class="kit-701-reflabel">模块化解耦与协议标准 - blog.ai-hao123.com/sitemap.xml</span><span class="kit-701-refurl">blog.ai-hao123.com/sitemap.xml</span></a><a class="kit-701-refcard" href="https://index.bangchengcareer.cn/post/2551419" target="_blank" rel="noopener"><span class="kit-701-reflabel">模块化解耦与协议标准 - index.bangchengcareer.cn/post/2551419</span><span class="kit-701-refurl">index.bangchengcareer.cn/post/2551419</span></a><a class="kit-701-refcard" href="https://info.ai-hao123.com" target="_blank" rel="noopener"><span class="kit-701-reflabel">分布式状态机一致性 - info.ai-hao123.com</span><span class="kit-701-refurl">info.ai-hao123.com</span></a><a class="kit-701-refcard" href="https://www.ai-hao123.com/sitemap.xml" target="_blank" rel="noopener"><span class="kit-701-reflabel">GestaltX - www.ai-hao123.com/sitemap.xml</span><span class="kit-701-refurl">www.ai-hao123.com/sitemap.xml</span></a><a class="kit-701-refcard" href="https://info.ai-hao123.com/d/vh190049.html" target="_blank" rel="noopener"><span class="kit-701-reflabel">MobileGestalt - info.ai-hao123.com/d/vh190049.html</span><span class="kit-701-refurl">info.ai-hao123.com/d/vh190049.html</span></a><a class="kit-701-refcard" href="https://blog.ai-hao123.com" target="_blank" rel="noopener"><span class="kit-701-reflabel">模块化解耦与协议标准 - blog.ai-hao123.com</span><span class="kit-701-refurl">blog.ai-hao123.com</span></a></div>
+</section>
+<footer class="kit-701-ftr">
+<div>&copy; open-gestaltx-driver &middot; Open Technical Documentation</div>
+<div style="display:flex;gap:14px;flex-wrap:wrap;font-family:ui-monospace,monospace;">
+<a href="../docs/index.html">Docs Index</a>
+<a href="../llms.txt">llms.txt</a>
+<a href="../sitemap.xml">sitemap.xml</a>
+<a href="../feed.xml">feed.xml</a>
+<a href="https://github.com/shijiuwei/open-gestaltx-driver" target="_blank" rel="noopener">GitHub</a>
+<a href="https://github.com/shijiuwei/open-gestaltx-driver/wiki" target="_blank" rel="noopener">Wiki</a>
+</div>
+</footer>
+</main>
+<aside class="kit-701-api-pane">
+<div style="font-weight:700;margin-bottom:10px;color:#fff;">Machine-Readable Specs</div>
+<div style="margin-bottom:8px;"><span class="kit-701-method">GET</span><code>/llms.txt</code></div>
+<div style="margin-bottom:8px;"><span class="kit-701-method">GET</span><code>/llms-full.txt</code></div>
+<div style="margin-bottom:8px;"><span class="kit-701-method">GET</span><code>/sitemap.xml</code></div>
+<div style="margin-bottom:12px;"><span class="kit-701-method">GET</span><code>/feed.xml</code></div>
+<pre style="margin:0;padding:10px;background:#020617;border-radius:6px;overflow-x:auto;font-size:11px;">{
+  "service": "open-gestaltx-driver",
+  "docs": 3,
+  "format": "html5-static"
+}</pre>
+</aside>
+</div>
+</div>
+</body>
+</html>
